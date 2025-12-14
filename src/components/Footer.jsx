@@ -92,26 +92,6 @@ const Footer = () => {
               ))}
             </div>
 
-            {/* WhatsApp Button - Same style as Follow Us */}
-            <div className="mb-6">
-              <h3 className="text-white font-semibold mb-4">Chat with Us</h3>
-              <a
-                href="https://wa.me/15551234567"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
-                aria-label="WhatsApp"
-              >
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d={whatsAppIcon} />
-                </svg>
-              </a>
-            </div>
-
             <div className="text-sm text-gray-400">
               <p>Email: info@bposolutions.com</p>
               <p>Phone: +1 (555) 123-4567</p>
