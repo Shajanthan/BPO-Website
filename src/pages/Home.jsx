@@ -238,41 +238,15 @@ const Home = () => {
                     <div className="flex flex-col sm:flex-row gap-4">
                       <Link
                         to="/services"
-                        className="bg-white text-primary-600 px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg inline-flex items-center justify-center gap-2"
+                        className="bg-white text-primary-600 px-6 md:px-8 py-3 rounded-lg font-semibold text-center"
                       >
-                        <span>Discover Solutions</span>
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
-                          />
-                        </svg>
+                        Discover Solutions
                       </Link>
                       <Link
                         to="/contact"
-                        className="bg-transparent border-2 border-white text-white px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg inline-flex items-center justify-center gap-2 backdrop-blur-sm"
+                        className="bg-transparent border-2 border-white text-white px-6 md:px-8 py-3 rounded-lg font-semibold text-center"
                       >
-                        <span>Begin Your Journey</span>
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
-                          />
-                        </svg>
+                        Begin Your Journey
                       </Link>
                     </div>
                   </div>
