@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FaFileAlt, FaLightbulb, FaChartLine } from "react-icons/fa";
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -192,7 +193,9 @@ const Home = () => {
       setCurrentSlide((prev) => (prev + 1) % bpoReasons.length);
     }
     if (isRightSwipe) {
-      setCurrentSlide((prev) => (prev - 1 + bpoReasons.length) % bpoReasons.length);
+      setCurrentSlide(
+        (prev) => (prev - 1 + bpoReasons.length) % bpoReasons.length
+      );
     }
   };
 
@@ -201,7 +204,7 @@ const Home = () => {
       {/* Hero Section - Carousel */}
       <section className="relative bg-gradient-to-br from-primary-600 to-primary-800 text-white overflow-hidden">
         {/* Carousel Slides */}
-        <div 
+        <div
           className="relative h-[500px] md:h-[600px] touch-pan-y"
           onTouchStart={onTouchStartHero}
           onTouchMove={onTouchMoveHero}
@@ -451,7 +454,7 @@ const Home = () => {
           {/* Slider Container */}
           <div className="relative">
             {/* Slider */}
-            <div 
+            <div
               className="relative h-auto min-h-[600px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl touch-pan-y"
               onTouchStart={onTouchStartBpo}
               onTouchMove={onTouchMoveBpo}
@@ -583,6 +586,57 @@ const Home = () => {
                 />
               </svg>
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Resources Section */}
+      <section className="py-12 bg-gradient-to-br from-primary-50 via-white to-primary-50 relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-primary-100">
+            <div className="grid md:grid-cols-2 gap-6 items-center">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                  Unlock Business Excellence with Our Resources
+                </h2>
+                <p className="text-base text-gray-600 mb-4 leading-relaxed">
+                  Discover a wealth of knowledge through our curated collection
+                  of articles, expert insights, and strategic guidance.
+                </p>
+                <Link
+                  to="/resources"
+                  className="inline-block bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg text-sm"
+                >
+                  Explore Resources
+                </Link>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl p-4 md:p-6 text-white shadow-lg">
+                  <div className="grid grid-cols-3 gap-3 md:gap-4">
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center bg-white/20 rounded-lg p-2 mb-2">
+                        <FaFileAlt className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-sm mb-1">
+                        Expert Articles
+                      </h3>
+                    </div>
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center bg-white/20 rounded-lg p-2 mb-2">
+                        <FaLightbulb className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-sm mb-1">Business Tips</h3>
+                    </div>
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center bg-white/20 rounded-lg p-2 mb-2">
+                        <FaChartLine className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-sm mb-1">Latest Trends</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
