@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroSlide, setHeroSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [bpoTouchStart, setBpoTouchStart] = useState(null);
+  const [bpoTouchEnd, setBpoTouchEnd] = useState(null);
 
   const heroSlides = [
     {
@@ -142,12 +146,67 @@ const Home = () => {
     setHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
+  // Swipe handlers for Hero Carousel
+  const minSwipeDistance = 50;
+
+  const onTouchStartHero = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMoveHero = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEndHero = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    }
+    if (isRightSwipe) {
+      prevSlide();
+    }
+  };
+
+  // Swipe handlers for BPO Slider
+  const onTouchStartBpo = (e) => {
+    setBpoTouchEnd(null);
+    setBpoTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMoveBpo = (e) => {
+    setBpoTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEndBpo = () => {
+    if (!bpoTouchStart || !bpoTouchEnd) return;
+    const distance = bpoTouchStart - bpoTouchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      setCurrentSlide((prev) => (prev + 1) % bpoReasons.length);
+    }
+    if (isRightSwipe) {
+      setCurrentSlide((prev) => (prev - 1 + bpoReasons.length) % bpoReasons.length);
+    }
+  };
+
   return (
     <div>
       {/* Hero Section - Carousel */}
       <section className="relative bg-gradient-to-br from-primary-600 to-primary-800 text-white overflow-hidden">
         {/* Carousel Slides */}
-        <div className="relative h-[500px] md:h-[600px]">
+        <div 
+          className="relative h-[500px] md:h-[600px] touch-pan-y"
+          onTouchStart={onTouchStartHero}
+          onTouchMove={onTouchMoveHero}
+          onTouchEnd={onTouchEndHero}
+        >
           {heroSlides.map((slide, index) => (
             <div
               key={index}
@@ -168,26 +227,52 @@ const Home = () => {
               </div>
               {/* Content */}
               <div className="relative h-full flex items-center z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 md:py-0">
                   <div className="transform transition-all duration-1000">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
                       {slide.title}
                     </h1>
-                    <p className="text-xl text-primary-100 max-w-3xl mb-8">
+                    <p className="text-lg sm:text-xl text-primary-100 max-w-3xl mb-6 md:mb-8">
                       {slide.description}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
                       <Link
                         to="/services"
-                        className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors shadow-lg inline-block"
+                        className="bg-white text-primary-600 px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg inline-flex items-center justify-center gap-2"
                       >
-                        Discover Solutions
+                        <span>Discover Solutions</span>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
                       </Link>
                       <Link
                         to="/contact"
-                        className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors inline-block"
+                        className="bg-transparent border-2 border-white text-white px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg inline-flex items-center justify-center gap-2 backdrop-blur-sm"
                       >
-                        Begin Your Journey
+                        <span>Begin Your Journey</span>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
                       </Link>
                     </div>
                   </div>
@@ -196,14 +281,14 @@ const Home = () => {
             </div>
           ))}
 
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows - Hidden on mobile */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all backdrop-blur-sm"
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all backdrop-blur-sm items-center justify-center"
             aria-label="Previous slide"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 md:w-6 md:h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -218,11 +303,11 @@ const Home = () => {
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all backdrop-blur-sm"
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all backdrop-blur-sm items-center justify-center"
             aria-label="Next slide"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 md:w-6 md:h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -237,15 +322,15 @@ const Home = () => {
           </button>
 
           {/* Dots Indicator */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
             {heroSlides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`h-3 rounded-full transition-all ${
+                className={`h-2.5 md:h-3 rounded-full transition-all flex-shrink-0 ${
                   index === heroSlide
-                    ? "w-8 bg-white"
-                    : "w-3 bg-white/50 hover:bg-white/75"
+                    ? "w-6 md:w-8 bg-white"
+                    : "w-2.5 md:w-3 bg-white/50 hover:bg-white/75"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -392,7 +477,12 @@ const Home = () => {
           {/* Slider Container */}
           <div className="relative">
             {/* Slider */}
-            <div className="relative h-[600px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+            <div 
+              className="relative h-auto min-h-[600px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl touch-pan-y"
+              onTouchStart={onTouchStartBpo}
+              onTouchMove={onTouchMoveBpo}
+              onTouchEnd={onTouchEndBpo}
+            >
               {bpoReasons.map((reason, index) => (
                 <div
                   key={index}
@@ -402,9 +492,9 @@ const Home = () => {
                       : "opacity-0 z-0"
                   }`}
                 >
-                  <div className="grid md:grid-cols-2 h-full">
+                  <div className="grid md:grid-cols-2 h-full min-h-[600px] md:min-h-[500px]">
                     {/* Image Side */}
-                    <div className="relative h-full">
+                    <div className="relative h-64 md:h-full">
                       <img
                         src={reason.image}
                         alt={reason.title}
@@ -414,26 +504,26 @@ const Home = () => {
                     </div>
 
                     {/* Content Side */}
-                    <div className="bg-white p-8 md:p-12 flex flex-col justify-center">
+                    <div className="bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center">
                       <div className="mb-6">
-                        <span className="text-primary-600 font-semibold text-sm uppercase tracking-wide">
+                        <span className="text-primary-600 font-semibold text-xs md:text-sm uppercase tracking-wide">
                           {index + 1} / {bpoReasons.length}
                         </span>
-                        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mt-2 mb-4">
                           {reason.title}
                         </h3>
-                        <p className="text-lg text-gray-600 leading-relaxed">
+                        <p className="text-base md:text-lg text-gray-600 leading-relaxed">
                           {reason.description}
                         </p>
                       </div>
 
                       {/* Points List */}
-                      <div className="space-y-4">
+                      <div className="space-y-3 md:space-y-4">
                         {reason.points.map((point, idx) => (
                           <div key={idx} className="flex items-start">
-                            <div className="flex-shrink-0 w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                            <div className="flex-shrink-0 w-5 h-5 md:w-6 md:h-6 bg-primary-600 rounded-full flex items-center justify-center mr-3 mt-0.5">
                               <svg
-                                className="w-4 h-4 text-white"
+                                className="w-3 h-3 md:w-4 md:h-4 text-white"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -446,7 +536,7 @@ const Home = () => {
                                 />
                               </svg>
                             </div>
-                            <p className="text-gray-700 text-base font-medium">
+                            <p className="text-gray-700 text-sm md:text-base font-medium">
                               {point}
                             </p>
                           </div>
@@ -459,33 +549,33 @@ const Home = () => {
             </div>
 
             {/* Navigation Dots */}
-            <div className="flex justify-center mt-8 space-x-3">
+            <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
               {bpoReasons.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`h-3 rounded-full transition-all duration-300 ${
+                  className={`h-2.5 md:h-3 rounded-full transition-all duration-300 flex-shrink-0 ${
                     index === currentSlide
-                      ? "w-10 bg-primary-600"
-                      : "w-3 bg-gray-300 hover:bg-gray-400"
+                      ? "w-6 md:w-10 bg-primary-600"
+                      : "w-2.5 md:w-3 bg-gray-300 hover:bg-gray-400"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
             </div>
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Hidden on mobile */}
             <button
               onClick={() =>
                 setCurrentSlide(
                   (prev) => (prev - 1 + bpoReasons.length) % bpoReasons.length
                 )
               }
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+              className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110 items-center justify-center"
               aria-label="Previous slide"
             >
               <svg
-                className="w-6 h-6 text-primary-600"
+                className="w-5 h-5 md:w-6 md:h-6 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -502,11 +592,11 @@ const Home = () => {
               onClick={() =>
                 setCurrentSlide((prev) => (prev + 1) % bpoReasons.length)
               }
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+              className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110 items-center justify-center"
               aria-label="Next slide"
             >
               <svg
-                className="w-6 h-6 text-primary-600"
+                className="w-5 h-5 md:w-6 md:h-6 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
